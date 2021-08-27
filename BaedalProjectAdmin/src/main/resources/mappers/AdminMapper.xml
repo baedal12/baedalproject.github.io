@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.AdminMapper">
+
+<insert id="adminInsert" parameterType="Model.AdminDTO">
+	insert into ADMINS(ADMINS_NUM, ADMINS_PW, ADMINS_NAME, ADMINS_DEPT, ADMINS_JOB, ADMINS_CONTACT, 
+	ADMINS_EMAIL, ADMINS_ID)
+	values(#{adminNum}, #{adminPw}, #{adminName}, #{adminDept}, #{adminJob}, #{adminContact},
+	 #{adminEmail}, #{adminId})
+</insert>
+
+<select id="adminsList" resultType="Model.AdminDTO">
+	select ADMINS_NUM adminNum, ADMINS_NAME adminName, ADMINS_DEPT adminDept, ADMINS_JOB adminJob, 
+	ADMINS_CONTACT adminContact, ADMINS_EMAIL adminEmail, ADMINS_ID adminId
+	from admins
+</select>
+
+<select id="adminDetail" resultType="Model.AdminDTO" parameterType="string">
+	select ADMINS_NUM adminNum, ADMINS_NAME adminName, ADMINS_DEPT adminDept, ADMINS_JOB adminJob, 
+	ADMINS_CONTACT adminContact, ADMINS_EMAIL adminEmail, ADMINS_ID adminId
+	from admins
+	where ADMINS_NUM=#{adminNum}
+</select>
+
+<delete id="adminDel" parameterType="string">
+	delete from admins
+	where ADMINS_NUM=#{adminNum}
+</delete>
+
+<update id="myInfoModify" parameterType="Model.AdminDTO">
+	update admins
+	set
+	ADMINS_DEPT=#{adminDept},
+	ADMINS_JOB=#{adminJob},
+	ADMINS_CONTACT=#{adminContact},
+	ADMINS_EMAIL=#{adminEmail}
+	where ADMINS_NUM=#{adminNum}
+</update>
+
+<update id="pwChange" parameterType="Model.AdminDTO">
+	update admins
+	set ADMINS_PW=#{adminPw}
+	where ADMINS_NUM=#{adminNum}
+</update>
+
+<select id="adminPw" parameterType="string" resultType="string">
+	select ADMINS_PW
+	from admins
+	where ADMINS_NUM=#{adminNum}
+</select>
+
+</mapper>

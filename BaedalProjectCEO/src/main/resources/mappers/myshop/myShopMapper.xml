@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.myShopMapper">
+	<select id="myShopInfo" parameterType="String" resultType="Model.CompanyDTO">
+ 		SELECT CEO_ID ceoId, CEO_NAME ceoName, COM_NUM comNum, COM_ID comId, 
+ 		COM_NAME comName, COM_ADDRESS comAddress, COM_CATEGORY comCateGory,
+ 		COM_NOTICE comNotice, COM_NOTICE_IMG comNoticeImg, 
+ 		MIN_PRICE minPrice, DELIVERYPAY deliverypay, FREEDELIVERY freeDelivery, 
+ 		BUSINESSTIME businesstime, DELIVERYZONE deliveryZone, APPDATE appDate, COM_PHONE comPhone
+ 		from company 
+ 		where COM_ID = #{comId}
+ 	</select>
+ 	
+
+ 	<update id="shopUpdate" parameterType="Model.CompanyDTO">
+ 		UPDATE COMPANY SET DELIVERYPAY = #{deliverypay}, BUSINESSTIME = #{businesstime}, COM_PHONE = #{comPhone}
+ 		where COM_ID = #{comId}
+ 	</update>
+ 	
+ 	<update id="comNco" parameterType="Model.CompanyDTO">
+ 		UPDATE COMPANY SET COM_NOTICE = #{comNotice}, COM_NOTICE_IMG = #{comNoticeImg}
+ 		where COM_ID = #{comId}
+ 	</update>
+ 	
+ 	<update id="comNoticeEn" parameterType="Model.CompanyDTO">
+		UPDATE COMPANY SET COM_NOTICE = #{comNotice}, COM_NOTICE_IMG = #{comNoticeImg}
+		where COM_ID = #{comId}	
+ 	</update>
+ 	
+ 	<update id="comPhoneChange" parameterType="Model.CompanyDTO">
+ 		UPDATE COMPANY SET COM_PHONE = #{comPhone}
+ 		where COM_ID = #{comId}
+ 	</update>
+ 	
+ 	<!-- 주문 -->
+ 	<select id="liveOrder" resultType="Model.OrderDTO" parameterType="string">
+ 		select ORDER_NUM orderNum, ORDERDATE orderDate, ORDER_RESULT orderResult, COM_ID comId
+		from ORDERLIST 
+		WHERE COM_ID = #{comId}
+ 	</select>
+ 	
+ 	<select id="orderDetail" parameterType="String" resultType="Model.OrderDTO">
+		SELECT O.ORDER_NUM orderNum, O.ORDERDATE orderDate, O.METHODSPAYMENT methodsPayment, 
+		O.ORDER_RESULT orderResult, O.ORDER_ADDRESS orderAddress, O.ORDER_REQUEST orderRequest, 
+		O.MENU_ID menuId, O.COM_ID comId, O.ORDERSITUATION orderSituation, O.INSTALMENT instalment, 
+		O.COUPON coupon, O.ORDERSTATE orderState, O.MEM_ID memId, M.MENU_NAME menuName, M.MENU_PRICE menuPrice 
+		FROM ORDERLIST O 
+		JOIN MENU M  
+		ON O.MENU_ID = M.MENU_ID
+		JOIN USERMEMBER U  
+		ON O.MEM_ID = U.MEM_ID
+		JOIN COMPANY C
+		ON O.COM_ID = C.COM_ID
+		WHERE O.ORDER_NUM = #{orderNum}
+ 	</select>
+ 	
+ 	<update id="orderUpdate" parameterType="Model.OrderDTO">
+ 		UPDATE ORDERLIST 
+ 		SET ORDER_RESULT = #{orderResult} , ORDERSITUATION = #{orderSituation}
+ 		WHERE ORDER_NUM = #{orderNum}
+ 	</update>
+ 	
+ 	<!-- 리뷰 -->
+ 	<select id="reviewList" parameterType="String" resultType="Model.ReviewDTO">
+ 		SELECT R.ORDER_NUM orderNum,R.REVIEW_CONTENT reviewContent,R.REVIEW_STAR reviewStar,R.REIVEW_IMG reviewImg,
+ 		R.REVIEW_DATE reviewDate,R.CEOREPLIES ceoreplies, O.COM_ID comId,O.MEM_ID memId
+ 		FROM REVIEW R JOIN ORDERLIST O 
+ 		ON R.ORDER_NUM = O.ORDER_NUM
+ 		WHERE O.COM_ID = #{comId}
+ 	</select>
+ 	
+ 	<update id="replyWrite" parameterType="Model.ReviewDTO">
+ 		UPDATE REVIEW
+ 		SET CEOREPLIES = #{ceoreplies}
+ 		WHERE ORDER_NUM = #{orderNum}
+ 	</update>
+ 	
+ 	<select id="reviewDateList" parameterType="String" resultType="Model.ReviewDTO">
+ 		SELECT R.ORDER_NUM orderNum,R.REVIEW_CONTENT reviewContent,R.REVIEW_STAR reviewStar,R.REIVEW_IMG reviewImg,
+ 		R.REVIEW_DATE reviewDate,R.CEOREPLIES ceoreplies, O.COM_ID comId,O.MEM_ID memId
+ 		FROM REVIEW R JOIN ORDERLIST O 
+ 		ON R.ORDER_NUM = O.ORDER_NUM
+ 		WHERE O.COM_ID = #{comId} 
+ 		AND R.REVIEW_DATE BETWEEN TO_DATE('#{startDate}','YYYY-MM-DD') AND TO_DATE('#{endDate}','YYYY-MM-DD')
+ 	</select>
+ 	
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.MyShopMenuMapper">
+
+<insert id="menuTitleResist" parameterType="Model.MenuTitleDTO">
+	insert into menutitle(MENUTITLE_NUM, MENUTITLE_NAME, COM_ID)
+	values(menutitle_seq.nextval, #{menuTitleName}, #{comId})
+</insert>
+
+<select id="titleList" parameterType="string" resultType="Model.MenuTitleDTO">
+	select MENUTITLE_NUM menuTitleNum, MENUTITLE_NAME menuTitleName, COM_ID comId
+	from menutitle
+	where COM_ID = #{comId}
+	order by MENUTITLE_NUM
+</select>
+
+<select id="titleInfo" parameterType="string" resultType="Model.MenuTitleDTO">
+	select MENUTITLE_NUM menuTitleNum, MENUTITLE_NAME menuTitleName, COM_ID comId
+	from menutitle
+	where MENUTITLE_NUM=#{menuTitleNum}
+</select>
+
+<update id="titleModify" parameterType="Model.MenuTitleDTO">
+	update menutitle
+	set MENUTITLE_NAME=#{menuTitleName}
+	where MENUTITLE_NUM=#{menuTitleNum}	
+</update>
+
+<insert id="menuResist" parameterType="Model.MenuDTO">
+	insert into menu(MENU_ID, MENU_NAME, MENU_PRICE, MENU_IMG, SELL, MENU_EXPLAIN, MENU_CHOICE,
+	COM_ID, MENUTITLE_NUM)
+	values(to_char(sysdate, 'yyyyMMdd')||menu_seq.nextval, #{menuName}, #{menuPrice},
+	#{menuImg}, 'N', #{menuExplain}, null, #{comId}, #{menuTitleNum})
+</insert>
+
+<select id="detailMenuList" parameterType="string" resultType="Model.MenuDTO">
+	select MENU_ID menuId, MENU_NAME menuName, MENU_PRICE menuPrice, MENU_IMG menuImg, SELL sell,
+	MENU_EXPLAIN menuExplain, MENU_CHOICE menuChoice, COM_ID comId, MENUTITLE_NUM menuTitleNum
+	from menu
+	where MENUTITLE_NUM=#{menuTitleNum}
+	order by MENU_ID
+</select>
+
+<select id="menuInfo" parameterType="string" resultType="Model.MenuDTO">
+	select MENU_ID menuId, MENU_NAME menuName, MENU_PRICE menuPrice, MENU_IMG menuImg, SELL sell,
+	MENU_EXPLAIN menuExplain, MENU_CHOICE menuChoice, COM_ID comId, MENUTITLE_NUM menuTitleNum
+	from menu
+	where MENU_ID = #{menuId}
+</select>
+
+<update id="menuSell" parameterType="Model.MenuDTO">
+	update menu
+	<if test='sell.equals("N")'>
+	set sell = 'Y'
+	</if>
+	<if test='sell.equals("Y")'>
+	set sell = 'N'
+	</if>
+	where MENU_ID = #{menuId}
+</update>
+
+<delete id="menuOut" parameterType="string">
+	delete from menu
+	where MENU_ID = #{menuId}
+</delete>
+
+<update id="imgOut" parameterType="string">
+	update menu
+	set MENU_IMG = null
+	where MENU_ID = #{menuId}
+</update>
+
+<update id="menuUpdate" parameterType="Model.MenuDTO">
+	update menu
+	set MENU_NAME=#{menuName}, MENU_PRICE=#{menuPrice}, MENU_EXPLAIN=#{menuExplain}
+	<if test="menuImg!=null">
+	, MENU_IMG=#{menuImg}
+	</if>
+	where MENU_ID = #{menuId}
+</update>
+
+<delete id="titleDel" parameterType="string">
+	delete from MENUTITLE
+	where MENUTITLE_NUM = #{menuTitleNum}
+</delete>
+
+
+<insert id="choiceResist" parameterType="Model.MenuChoiceDTO">
+	insert into menuchoice (MENU_CHOICE_NUM, MENU_ID, CHOICE_TITLE, CHOICE_TYPE)
+	values(menuChoice_seq.nextval, #{menuId}, #{choiceTitle}, #{choiceType})
+</insert>
+
+<select id="choiceList" parameterType="string" resultType="Model.MenuChoiceDTO">
+	select MENU_CHOICE_NUM menuChoiceNum, MENU_ID menuId, CHOICE_TITLE choiceTitle, CHOICE_TYPE choiceType
+	 from menuchoice
+	where MENU_ID = #{menuId}
+</select>
+
+<select id="choiceInfo" parameterType="string" resultType="Model.MenuChoiceDTO">
+	select MENU_CHOICE_NUM menuChoiceNum, MENU_ID menuId, CHOICE_TITLE choiceTitle, CHOICE_TYPE choiceType
+	 from menuchoice
+	 where MENU_CHOICE_NUM = #{menuChoiceNum}
+</select>
+
+<insert id="choiceOption" parameterType="Model.MenuChoiceDTO">
+	insert into choiceoption (MENU_CHOICE_NUM, CHOICE_OPTION, CHOICE_PRICE)
+	values(#{menuChoiceNum}, #{choiceOption}, #{choicePrice})
+</insert>
+
+<select id="choiceOptionInfo" parameterType="string" resultType="Model.MenuChoiceDTO">
+	select MENU_CHOICE_NUM menuChoiceNum, CHOICE_OPTION choiceOption, CHOICE_PRICE choicePrice
+	from choiceoption
+	where MENU_CHOICE_NUM = #{menuChoiceNum}
+</select>
+</mapper>

@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+/* 로그인 상단 */
+
+
+/* login */
+.table_wrap{width:700px; margin:0 auto;}
+.table_wrap .last{overflow:hidden; padding-top:10px; border:none; box-sizing:border-box;}
+.table_wrap .checkbox{float:left;}
+.table_wrap .checkbox li{float:left; position:relative; margin-left:30px;}
+.table_wrap .checkbox li:before{position:absolute; left:-15px; top:5px; width:1px; height:15px; background-color:#ccc; content:'';}
+.table_wrap .checkbox li:first-child{margin-left:0;}
+.table_wrap .checkbox li:first-child:before{width:0;}
+.table_wrap .r_login{float:right; height:50px; font-weight:bold;}
+
+.right_cont{float:left; width:70%; padding:90px; box-sizing: border-box;}
+.right_cont p{font-weight:500; font-size:28px; letter-spacing:-2px;}
